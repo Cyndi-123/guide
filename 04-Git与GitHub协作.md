@@ -178,12 +178,57 @@ git branch -d <分支名>
 | 合并后删除分支 | 已启用 | 减少分支堆积 |
 | 组织默认权限 | read | 成员默认只读，按仓库授权 |
 
-## 4.10 验收清单
+## 4.10 仓库模板与标签
+
+组织级工单模板由 `.github` 仓库提供，对各仓库生效需满足两个条件。
+
+### 4.10.1 模板目录位置
+
+工单模板与 `config.yml` 必须位于仓库内的 `.github/ISSUE_TEMPLATE/` 目录：
+
+```
+<仓库>/
+└── .github/
+    └── ISSUE_TEMPLATE/
+        ├── bug_report.yml
+        ├── feature_request.yml
+        ├── onboarding.yml
+        └── config.yml
+```
+
+放置于仓库根目录的 `ISSUE_TEMPLATE/` 不会被识别，表现为访问 `?template=<名称>.yml` 时回落到空白工单编辑器。
+
+### 4.10.2 标签依赖
+
+模板 `labels` 字段声明的标签须在当前仓库中存在。GitHub 默认提供 `bug`、`documentation`、`enhancement`、`good first issue`、`help wanted` 等标签，但组织模板额外依赖以下两个非默认标签：
+
+| 标签 | 用途 |
+| :-- | :-- |
+| `triage` | 待分类，等待维护者评估优先级与归属 |
+| `onboarding` | 新成员入职流程相关 |
+
+新建仓库时须手动创建这两个标签：
+
+```powershell
+foreach ($repo in @('<仓库名>')) {
+  gh api -X POST "repos/NingXia-XinQiCyberClub/$repo/labels" -f name="triage" -f color="fbca04" -f description="待分类，等待维护者评估优先级与归属"
+  gh api -X POST "repos/NingXia-XinQiCyberClub/$repo/labels" -f name="onboarding" -f color="0e8a16" -f description="新成员入职流程相关"
+}
+```
+
+### 4.10.3 验证方式
+
+访问 `https://github.com/NingXia-XinQiCyberClub/<仓库>/issues/new/choose`，页面应列出全部表单选项。
+
+需注意，`community/profile` 接口的 `issue_template` 字段与 GraphQL 的 `repository.issueTemplates` 字段均只反映旧版 `.md` 模板，对 YAML 表单返回空值，不能作为判断依据。
+
+## 4.11 验收清单
 
 - [ ] 可独立完成一次完整变更请求流程
 - [ ] 提交信息符合第 4.5 节要求
 - [ ] 可独立解决一次合并冲突
 - [ ] 理解 `reset` 与 `revert` 的适用场景差异
+- [ ] 可为新仓库正确放置工单模板并创建 `triage`、`onboarding` 标签
 
 ---
 
