@@ -31,9 +31,29 @@
 2. 成功克隆任一组织仓库，并完成一次变更请求的合并
 3. 在 [Discussions](https://github.com/NingXia-XinQiCyberClub/.github/discussions) 完成自我介绍
 
+## 三、入门任务
+
+以下工单构成新成员的入门任务集，按难度递增排列。任务均以文档修订为主，不涉及复杂代码，目的是在真实仓库中完成一次完整的协作流程。
+
+| 顺序 | 工单 | 训练目标 | 预计耗时 |
+| :-- | :-- | :-- | :-- |
+| 1 | [#4 补充 Windows 下 GBK 文件乱码的处理条目](https://github.com/NingXia-XinQiCyberClub/guide/issues/4) | 补充文档章节，练习定位既有内容与保持体例一致 | 1 小时 |
+| 2 | [#2 校对第 2 章 macOS 与 Linux 命令](https://github.com/NingXia-XinQiCyberClub/guide/issues/2) | 实际验证命令，练习以事实为依据修订文档 | 2 小时 |
+| 3 | [#1 为第 6 章补充各方向练习题清单](https://github.com/NingXia-XinQiCyberClub/guide/issues/1) | 检索与筛选外部资料，练习信息组织与来源标注 | 3 小时 |
+| 4 | [#3 补充 LICENSE 文件](https://github.com/NingXia-XinQiCyberClub/guide/issues/3) | 了解许可证类型，练习与维护者确认决策 | 1 小时 |
+
+任务执行要求：
+
+1. 领取任务前先在工单内回复，说明计划与预计完成时间，避免多人重复处理
+2. 按[贡献指南](https://github.com/NingXia-XinQiCyberClub/.github/blob/main/CONTRIBUTING.md)的流程创建分支、提交与变更请求
+3. 变更请求中须引用对应工单编号，格式为 `Closes #<编号>`
+4. 评审意见的处理方式为在原分支追加提交，不关闭后重新发起
+
+全部工单同时聚合于本仓库的 [`/contribute`](https://github.com/NingXia-XinQiCyberClub/guide/contribute) 页面。
+
 ---
 
-## 三、相关文档
+## 四、相关文档
 
 | 文档 | 用途 |
 | :-- | :-- |
@@ -46,7 +66,7 @@
 
 ---
 
-## 四、修订说明
+## 五、修订说明
 
 本教程采用普通 Markdown 维护，修订通过变更请求进行。发现表述错误、命令失效或环境描述过时，应提交变更请求并注明依据。
 
