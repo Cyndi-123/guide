@@ -192,7 +192,7 @@ git branch -d <分支名>
     └── ISSUE_TEMPLATE/
         ├── bug_report.yml
         ├── feature_request.yml
-        ├── onboarding.yml
+        ├── join.yml
         └── config.yml
 ```
 
@@ -205,14 +205,16 @@ git branch -d <分支名>
 | 标签 | 用途 |
 | :-- | :-- |
 | `triage` | 待分类，等待维护者评估优先级与归属 |
-| `onboarding` | 新成员入职流程相关 |
+| `membership` | 加入社团申请与成员登记 |
+| `needs-info` | 信息不完整或格式不符，需补充 |
 
-新建仓库时须手动创建这两个标签：
+新建仓库时须手动创建这三个标签：
 
 ```powershell
 foreach ($repo in @('<仓库名>')) {
   gh api -X POST "repos/NingXia-XinQiCyberClub/$repo/labels" -f name="triage" -f color="fbca04" -f description="待分类，等待维护者评估优先级与归属"
-  gh api -X POST "repos/NingXia-XinQiCyberClub/$repo/labels" -f name="onboarding" -f color="0e8a16" -f description="新成员入职流程相关"
+  gh api -X POST "repos/NingXia-XinQiCyberClub/$repo/labels" -f name="membership" -f color="0e8a16" -f description="加入社团申请与成员登记"
+  gh api -X POST "repos/NingXia-XinQiCyberClub/$repo/labels" -f name="needs-info" -f color="d93f0b" -f description="信息不完整或格式不符，需补充"
 }
 ```
 
@@ -228,7 +230,7 @@ foreach ($repo in @('<仓库名>')) {
 - [ ] 提交信息符合第 4.5 节要求
 - [ ] 可独立解决一次合并冲突
 - [ ] 理解 `reset` 与 `revert` 的适用场景差异
-- [ ] 可为新仓库正确放置工单模板并创建 `triage`、`onboarding` 标签
+- [ ] 可为新仓库正确放置工单模板并创建 `triage`、`membership`、`needs-info` 标签
 
 ---
 
