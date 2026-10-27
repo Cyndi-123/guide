@@ -29,7 +29,7 @@
 加入社团的判定标准为：
 
 1. 完成[加入社团申请](https://github.com/NingXia-XinQiCyberClub/.github/issues/new?template=join.yml)工单中的全部条目
-2. 成功克隆任一组织仓库，并完成一次变更请求的合并
+2. 成功 fork 并克隆任一组织仓库，完成一次变更请求的合并
 3. 在 [Discussions](https://github.com/NingXia-XinQiCyberClub/.github/discussions) 完成自我介绍
 
 ## 三、入门任务
@@ -46,7 +46,7 @@
 任务执行要求：
 
 1. 领取任务前先在工单内回复，说明计划与预计完成时间，避免多人重复处理
-2. 按[贡献指南](https://github.com/NingXia-XinQiCyberClub/.github/blob/main/CONTRIBUTING.md)的流程创建分支、提交与变更请求
+2. 按[贡献指南](https://github.com/NingXia-XinQiCyberClub/.github/blob/main/CONTRIBUTING.md)的流程 fork、创建分支、提交与变更请求（成员账号只读，不向组织仓库直接推送）
 3. 变更请求中须引用对应工单编号，格式为 `Closes #<编号>`
 4. 评审意见的处理方式为在原分支追加提交，不关闭后重新发起
 

@@ -27,15 +27,20 @@ Git 采用分布式模型，每个克隆均为完整仓库，包含全部提交�
 
 | 操作 | 命令 | 说明 |
 | :-- | :-- | :-- |
-| 克隆 | `git clone <地址>` | 默认克隆默认分支的完整历史 |
+| 克隆 | `git clone <地址>` | 默认克隆默认分支的完整历史。成员克隆自己的 fork |
 | 浅克隆 | `git clone --depth 1 <地址>` | 仅取最近一次提交，适用于只读场景 |
+| 查看远端 | `git remote -v` | 确认 `origin` 指向本人 fork、`upstream` 指向组织仓库 |
+| 登记上游 | `git remote add upstream <组织仓库地址>` | 每个 fork 只需执行一次 |
+| 拉取上游 | `git fetch upstream` | 获取组织仓库的最新提交 |
 | 查看状态 | `git status` | 显示暂存区与工作区差异 |
 | 查看差异 | `git diff` | 工作区与暂存区比较 |
 | 查看已暂存差异 | `git diff --staged` | 暂存区与最近提交比较 |
 | 暂存指定文件 | `git add <文件>` | 优先使用精确路径而非 `git add .` |
 | 提交 | `git commit -m "<信息>"` | 见 4.5 节 |
 | 查看历史 | `git log --oneline --graph -15` | 图形化显示分支结构 |
-| 推送 | `git push` | 首次推送需 `-u origin <分支名>` |
+| 推送 | `git push` | 首次推送需 `-u origin <分支名>`，推送到本人 fork |
+| 快进至上游 | `git merge --ff-only upstream/main` | 拉取合入结果时使用，避免多余合并提交 |
+| 同步 fork | `git push origin main` | 本地与上游对齐后推送至本人 fork |
 | 同步 | `git pull --rebase` | 将本地提交变基至远程最新提交之上 |
 
 ## 4.4 分支模型
@@ -56,11 +61,12 @@ main ──●──●──●──────────●──●──
 | `fix/*` | 缺陷修复 | 同上 |
 | `docs/*` | 文档变更 | 同上 |
 
-分支命名规则见贡献指南第 4 节。分支应基于最新 `main` 创建：
+分支命名规则见贡献指南第 4 节。成员对组织仓库只有读权限，因此分支建在本人 fork 中，且始终基于 `upstream/main` 创建：
 
 ```bash
+git fetch upstream
 git switch main
-git pull --rebase
+git merge --ff-only upstream/main
 git switch -c feat/description
 ```
 
@@ -88,49 +94,67 @@ git switch -c feat/description
 
 ## 4.6 变更请求流程
 
+组织默认仓库权限为 `read`：成员账号可读、可克隆，但不能向组织仓库推送分支。因此变更统一经 **fork** 提交——fork 是组织仓库在本人账号下的副本，推送与分支操作都在副本中进行，再通过变更请求合回组织仓库。
+
 ### 4.6.1 完整流程
 
 ```
-1. 同步 main
+0. fork 组织仓库到本人账号，克隆 fork 并登记 upstream
+1. 同步 upstream/main
 2. 创建功能分支
 3. 修改并提交
-4. 推送分支
-5. 发起变更请求（填写模板）
-6. 持续集成检查
+4. 推送分支至 fork
+5. 从 fork 发起变更请求（填写模板）
+6. 持续集成检查（首次来自 fork 的请求需维护者批准后运行）
 7. 评审与修订
 8. 合并（Squash）
-9. 删除分支并同步本地
+9. 同步 fork 与本地，删除分支
 ```
 
 ### 4.6.2 操作示例
 
 ```bash
-git switch main && git pull --rebase
+# 0. 首次：fork 后克隆本人副本（fork 在网页上点 Fork 完成）
+git clone git@github.com:<本人用户名>/guide.git
+cd guide
+git remote add upstream https://github.com/NingXia-XinQiCyberClub/guide.git
+git remote -v
+
+# 1-3. 每次开工：同步上游、建分支、修改提交
+git fetch upstream
+git switch main
+git merge --ff-only upstream/main
 git switch -c docs/fix-typo
 # 编辑文件
 git add <文件>
 git commit -m "docs: 修正术语表述"
+
+# 4. 推送到本人 fork
 git push -u origin docs/fix-typo
 ```
 
-推送后于 GitHub 点击 **Compare & pull request**，按模板填写说明。
+推送后于 fork 页面点击 **Compare & pull request**，确认 base 为组织仓库的 `main`、head 为本人 fork 的分支，按模板填写说明。
 
 ### 4.6.3 评审要求
 
 | 项目 | 要求 |
 | :-- | :-- |
 | 批准人数 | 至少 1 名维护者 |
-| 持续集成 | 全部检查通过 |
+| 持续集成 | 全部检查通过；首次来自 fork 的变更请求需维护者批准后检查才会运行 |
 | 冲突 | 须解决后方可合并 |
 | 合并方式 | Squash and merge，保持 `main` 线性历史 |
 
-评审意见的处理方式为在原分支追加提交并推送，变更请求自动更新。不应关闭后重新发起。
+评审意见的处理方式为在原分支追加提交并推送至 fork，变更请求自动更新。不应关闭后重新发起。
 
 ### 4.6.4 合并后清理
 
+合并发生在组织仓库，本人 fork 与本地需各自同步：
+
 ```bash
 git switch main
-git pull
+git fetch upstream
+git merge --ff-only upstream/main   # 拉取组织仓库的合入结果
+git push origin main                # 同步到本人 fork
 git branch -d <分支名>
 ```
 
@@ -176,7 +200,7 @@ git branch -d <分支名>
 | `main` 分支保护 | 已启用 | 需评审通过 |
 | 合并方式 | 仅 Squash | 保持线性历史 |
 | 合并后删除分支 | 已启用 | 减少分支堆积 |
-| 组织默认权限 | read | 成员默认只读，按仓库授权 |
+| 组织默认权限 | read | 成员对组织仓库只读，变更经 fork 提交，见 4.6 |
 
 ## 4.10 仓库模板与标签
 
